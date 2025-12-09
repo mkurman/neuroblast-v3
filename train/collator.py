@@ -41,7 +41,20 @@ class TokenizationDataCollator:
         """
 
         # Extract input_ids from features
-        def tokenize_function(examples):
+        def tokenize_function_chat(examples):
+            return self.tokenizer(
+                [self.tokenizer.apply_chat_template(
+                    example["messages"],
+                    tokenize=False,
+                ) for example in examples],
+                max_length=self.pad_to_multiple_of,
+                padding="max_length",
+                return_tensors="pt",
+                truncation=True,
+            )
+
+        
+        def tokenize_function_text(examples):
             return self.tokenizer(
                 [example["text"] for example in examples],
                 max_length=self.pad_to_multiple_of,
@@ -51,7 +64,7 @@ class TokenizationDataCollator:
             )
 
         if "input_ids" not in features[0]:
-            features = tokenize_function(features)
+            features = tokenize_function_chat(features) if "messages" in features[0] else tokenize_function_text(features)
             input_ids = features["input_ids"]
         else:
             # Extract input_ids from features
