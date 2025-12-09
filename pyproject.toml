@@ -1,0 +1,38 @@
+[project]
+name = "neuroblast-v3"
+version = "1.0.0"
+description = "NeuroBLAST v3 training and modeling"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "Apache-2.0"}
+authors = [
+    {name = "Mariusz Kurman", email = "mariusz.kurman@gmail.com"}
+]
+dependencies = [
+    "transformers",
+    "tokenizers",
+    "datasets",
+    "torch",
+    "accelerate",
+    "tqdm",
+    "trl",
+    "wandb",
+    "peft",
+    "entmax"
+]
+
+[project.optional-dependencies]
+jax = [
+    "jax[tpu]",
+    "flax",
+    "optax",
+    "orbax-checkpoint",
+    "torch_xla[tpu]"
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
