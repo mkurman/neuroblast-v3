@@ -18,7 +18,7 @@ NeuroBLAST differs from standard Transformers by utilizing a three-stage cortica
 
 PyTorch and JAX implementations are available in the `model` directory.
 
-Early checkpoint: [NeuroBLAST V3 SYNTH EC 150000](https://huggingface.co/mkurman/NeuroBLAST-V3-SYNTH-EC-150000) trained on the [PleIAs/SYNTH](https://huggingface.co/datasets/PleIAs/SYNTH) dataset.
+Early checkpoint: [NeuroBLAST V3 0.6M SYNTH EC 144B TOK](https://huggingface.co/mkurman/NeuroBLAST-V3-0.6M-SYNTH-EC-144B-TOK) trained on the [PleIAs/SYNTH](https://huggingface.co/datasets/PleIAs/SYNTH) dataset.
 
 ### Model Configuration
 The default configuration used in training:
@@ -81,3 +81,26 @@ python train/train_jax.py
 ```
 
 Arguments for distributed training (like `JAX_COORDINATOR_ADDRESS`, `JAX_PROCESS_COUNT`, `JAX_PROCESS_INDEX`) can be set via environment variables. The script supports gradient accumulation and uses `orbax-checkpoint` for saving models.
+
+## Serving with vLLM
+
+NeuroBLAST can be served using [vLLM](https://github.com/vllm-project/vllm) for high-throughput inference.
+
+### Installation
+
+```bash
+# Install with vLLM support
+pip install -e ".[vllm]"
+```
+
+### Serving
+
+```bash
+# Serve the model (vLLM will automatically discover the NeuroBLAST plugin)
+vllm serve mkurman/NeuroBLAST-V3-0.6M-SYNTH-EC-144B-TOK --served-model-name neuroblast-v3 --trust_remote_code --max-model-len 4096 --gpu-memory-utilization 0.8
+# Or serve from a local checkpoint
+vllm serve /path/to/checkpoint
+```
+
+The server exposes an OpenAI-compatible API on `http://localhost:8000`.
+
