@@ -72,7 +72,7 @@ def filter_synth(x):
 def map_synth(x):
     return {
         "text": "user\n"
-        + x["query"]
+        + x["query"] + (f"\n{x['constraints']}" if 'rag' in x['exercise'] else '')
         + "<|im_end|>\n"
         + "<|im_start|>assistant\n"
         + "\n<think>\n"
@@ -86,7 +86,7 @@ def map_synth_chat(x):
     return [
         {
             "role": "user", 
-            "content": x["query"]
+            "content": x["query"] + (f"\n{x['constraints']}" if 'rag' in x['exercise'] else '')
         },
         {
             "role": "assistant",
